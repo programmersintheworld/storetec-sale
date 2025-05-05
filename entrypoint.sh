@@ -13,10 +13,5 @@ php artisan optimize:clear
 php artisan key:generate
 php artisan migrate --force
 
-# ⚠️ Requiere que tengas `package.json` ya copiado
-echo "Building frontend assets..."
-npm install
-npm run build
-
 # Inicia Apache
 exec apache2-foreground
