@@ -22,8 +22,6 @@ FROM php:8.2-apache
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-RUN apt-get update && apt-get install -y nodejs npm
-
 # Instalar extensiones de PHP necesarias
 RUN apt-get update && apt-get install -y \
     unzip git curl libpq-dev libonig-dev libzip-dev zip \
