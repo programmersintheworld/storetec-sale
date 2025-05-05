@@ -29,6 +29,8 @@ WORKDIR /var/www/html
 # Expone el puerto 80
 EXPOSE 80
 
-# Generar la clave y ejecutar migraciones automáticamente
-RUN php artisan key:generate && php artisan migrate --force
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 
