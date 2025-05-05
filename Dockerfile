@@ -14,6 +14,10 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . ./
+
+# 👇 Añadimos vendor desde la etapa de composer
+COPY --from=vendor /app/vendor ./vendor
+
 RUN npm run build
 
 
