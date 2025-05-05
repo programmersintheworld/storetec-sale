@@ -5,18 +5,18 @@ if [ ! -f .env ]; then
   echo "APP_KEY=" > .env
 fi
 
-# Generar clave y ejecutar migraciones
+# Laravel setup
 php artisan config:clear
 php artisan view:clear
 php artisan route:clear
 php artisan optimize:clear
-
 php artisan key:generate
 php artisan migrate --force
 
+# ⚠️ Requiere que tengas `package.json` ya copiado
+echo "Building frontend assets..."
+npm install
+npm run build
 
-npm install --prefix resources
-npm run build --prefix resources
-
-# Iniciar Apache
+# Inicia Apache
 exec apache2-foreground
