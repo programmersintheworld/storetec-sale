@@ -14,5 +14,9 @@ php artisan optimize:clear
 php artisan key:generate
 php artisan migrate --force
 
+
+npm install --prefix resources
+npm run build --prefix resources
+
 # Iniciar Apache
 exec apache2-foreground
