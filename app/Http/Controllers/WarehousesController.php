@@ -55,11 +55,13 @@ class WarehousesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'percentage_earnings' => 'nullable|numeric|min:0|max:100',
         ]);
         $user = Auth::user();
         $warehouse = new Warehouses();
         $warehouse->name = $request->name;
         $warehouse->user_id = $user->id;
+        $warehouse->percentage_earnings = $request->percentage_earnings ?? 1.2;
         $warehouse->save();
 
         $warehouseInformation = [
@@ -70,6 +72,7 @@ class WarehousesController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
             ],
+            'percentage_earnings' => $warehouse->percentage_earnings,
             'created_at' => $warehouse->created_at,
         ];
 
@@ -109,9 +112,11 @@ class WarehousesController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'percentage_earnings' => 'nullable|numeric|min:0|max:100',
         ]);
         $warehouse = Warehouses::findOrFail($warehouse);
         $warehouse->name = $request->name;
+        $warehouse->percentage_earnings = $request->percentage_earnings ?? 1.2;
         $warehouse->save();
 
         if (session('selectedWarehouse.id') == $warehouse->id) {

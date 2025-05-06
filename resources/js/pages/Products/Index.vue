@@ -23,7 +23,6 @@ defineComponent({
 const props = defineProps({
     products: Array,
 });
-console.log('Products:', props.products);
 
 const showModal = ref(false);
 const dataList = ref([...props.products]);
@@ -36,20 +35,32 @@ const historyPrices = ref([]);
 const form = useForm({
     name: '',
     barcode: '',
-    quantity: 0,
 });
 
 const onBarcodeScanned = (value) => {
     form.barcode = value;
-    console.log('Barcode scanned:', value);
+    // console.log('Barcode scanned:', value);
     manualBarcode.value = true;
 };
 
 const onLoaded = () => {
-    console.log('Barcode reader loaded');
+    // console.log('Barcode reader loaded');
 };
 
 const createProduct = () => {
+    if (form.barcode === '') {
+        toast.error('El código de barras es obligatorio', {
+            theme: 'colored',
+        });
+        return;
+    }
+    if (form.name === '') {
+        toast.error('El nombre es obligatorio', {
+            theme: 'colored',
+        });
+        return;
+    }
+
     axios
         .post(route('warehouses.products.store'), form.data())
         .then((response) => {
@@ -80,6 +91,19 @@ const showEditModal = (product) => {
 };
 
 const updateProduct = () => {
+    if (form.barcode === '') {
+        toast.error('El código de barras es obligatorio', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (form.name === '') {
+        toast.error('El nombre es obligatorio', {
+            theme: 'colored',
+        });
+        return;
+    }
     axios
         .put(route('warehouses.products.update', productId.value), form.data())
         .then((response) => {

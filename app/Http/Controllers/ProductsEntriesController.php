@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Products;
 use App\Models\ProductsEntries;
 use App\Models\ProductsPrices;
+use App\Models\Warehouses;
 use Illuminate\Http\Request;
 
 class ProductsEntriesController extends Controller
@@ -72,6 +73,11 @@ class ProductsEntriesController extends Controller
             return response()->json(['error' => 'Warehouse not selected'], 400);
         }
 
+        $warehouse = Warehouses::find($warehouseId)->first();
+        if (!$warehouse) {
+            return response()->json(['error' => 'Warehouse not found'], 404);
+        }
+
         $entry = new ProductsEntries();
         $entry->product_id = $request->product_id;
         $entry->user_id = auth()->user()->id;
@@ -84,7 +90,7 @@ class ProductsEntriesController extends Controller
         $prices = new ProductsPrices();
         $prices->product_id = $request->product_id;
         $prices->purchase_price = $request->unit_cost;
-        $prices->sale_price = $request->unit_cost * 1.2; // Assuming a 20% markup for sale price
+        $prices->sale_price = $request->unit_cost * $warehouse->percentage_earnings;
         $prices->warehouse_id = $warehouseId;
         $prices->save();
 
@@ -102,7 +108,7 @@ class ProductsEntriesController extends Controller
                 'quantity' => $entry->quantity,
                 'total_cost' => $entry->total_cost,
                 'unit_cost' => $entry->unit_cost,
-                'entry_date' => $entry->entry_date,
+                'entry_date' => now(),
             ]
         ], 201);
     }

@@ -35,6 +35,34 @@ const form = useForm({
 });
 
 const createClient = () => {
+    if (form.name === '' || form.email === '' || form.phone === '') {
+        toast.error('Por favor completa todos los campos', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (!form.email.includes('@')) {
+        toast.error('El correo electrónico no es válido', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (form.phone.length < 10) {
+        toast.error('El número de teléfono no es válido', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (form.phone.length > 10) {
+        toast.error('El número de teléfono no es válido', {
+            theme: 'colored',
+        });
+        return;
+    }
+
     axios
         .post(route('customers.store'), form)
         .then((response) => {
@@ -64,6 +92,34 @@ const showEditModal = (product) => {
 };
 
 const updateClient = () => {
+    if (form.name === '' || form.email === '' || form.phone === '') {
+        toast.error('Por favor completa todos los campos', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (!form.email.includes('@')) {
+        toast.error('El correo electrónico no es válido', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (form.phone.length < 10) {
+        toast.error('El número de teléfono no es válido', {
+            theme: 'colored',
+        });
+        return;
+    }
+
+    if (form.phone.length > 10) {
+        toast.error('El número de teléfono no es válido', {
+            theme: 'colored',
+        });
+        return;
+    }
+    
     axios
         .put(route('customers.update', clientId.value), form)
         .then((response) => {

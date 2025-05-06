@@ -36,7 +36,6 @@ const form = useForm({
     quantity: 0,
     price: 0,
 });
-console.log(props.sales);
 
 const createSale = () => {
     if (form.product_id === null || form.client_id === null) {
@@ -71,7 +70,6 @@ const createSale = () => {
                 toast.success('Venta creada con éxito', {
                     theme: 'colored',
                 });
-                console.log(response.data.data);
                 dataList.value.unshift(response.data.data);
                 showModal.value = false;
                 form.reset();
@@ -136,7 +134,6 @@ const updateSale = () => {
                 toast.success('Venta actualizada con éxito', {
                     theme: 'colored',
                 });
-                console.log(response.data.data);
                 const index = dataList.value.findIndex((sale) => sale.id === saleId.value);
                 dataList.value[index] = response.data.data;
                 showModal.value = false;

@@ -23,8 +23,6 @@ const props = defineProps({
     entries: Array,
 });
 
-console.log(props.entries);
-
 const showModal = ref(false);
 const dataList = ref([...props.entries]);
 const dataProducts = ref([]);
@@ -81,23 +79,6 @@ const createEntry = () => {
                 toast.error('Error al crear el ingreso');
             }
         });
-    // axios
-    //     .post(route('customers.store'), form)
-    //     .then((response) => {
-    //         toast.success('Cliente creado con éxito', {
-    //             theme: 'colored',
-    //         });
-    //         dataList.value.push(response.data.data);
-    //         showModal.value = false;
-    //         form.reset();
-    //     })
-    //     .catch((error) => {
-    //         if (error.response.status === 422) {
-    //             form.setErrors(error.response.data.errors);
-    //         } else {
-    //             toast.error('Error al crear el cliente');
-    //         }
-    //     });
 };
 
 const showEditModal = (product) => {

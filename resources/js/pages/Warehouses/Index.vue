@@ -26,6 +26,7 @@ const props = defineProps({
     },
 });
 
+
 const showModal = ref(false);
 const warehouseName = ref(null);
 const isEdit = ref(false);
@@ -36,6 +37,7 @@ const showModalAddWarehouse = ref(false);
 
 const form = useForm({
     name: '',
+    percentage_earnings: 2,
 });
 
 const formAddAWarehouse = useForm({
@@ -43,8 +45,34 @@ const formAddAWarehouse = useForm({
 });
 
 const createWarehouse = () => {
+    if (!form.name) {
+        form.errors.name = 'El campo nombre es obligatorio.';
+        return;
+    }
+
+    if (form.name.length < 3) {
+        form.errors.name = 'El nombre debe tener al menos 3 caracteres.';
+        return;
+    }
+
+    if (form.name.length > 255) {
+        form.errors.name = 'El nombre no puede tener más de 255 caracteres.';
+        return;
+    }
+
+    if (form.percentage_earnings <= 0) {
+        form.errors.percentage_earnings = 'El porcentaje de ganancias no puede ser negativo o cero.';
+        form.percentage_earnings = 1;
+        return;
+    }
+
+    if (form.percentage_earnings > 100) {
+        form.errors.percentage_earnings = 'El porcentaje de ganancias no puede ser mayor a 100.';
+        return;
+    }
+
     axios
-        .post('/warehouses', { name: form.name })
+        .post('/warehouses', { name: form.name, percentage_earnings: form.percentage_earnings })
         .then((response) => {
             toast.success('Almacén creado con éxito', {
                 theme: 'colored',
@@ -65,15 +93,43 @@ const createWarehouse = () => {
 
 const showEditModal = (warehouse) => {
     form.name = warehouse.name;
+    form.percentage_earnings = warehouse.percentage_earnings;
     warehouseId.value = warehouse.id;
     isEdit.value = true;
     showModal.value = true;
 };
 
 const updateWarehouse = () => {
+    if (!form.name) {
+        form.errors.name = 'El campo nombre es obligatorio.';
+        return;
+    }
+
+    if (form.name.length < 3) {
+        form.errors.name = 'El nombre debe tener al menos 3 caracteres.';
+        return;
+    }
+
+    if (form.name.length > 255) {
+        form.errors.name = 'El nombre no puede tener más de 255 caracteres.';
+        return;
+    }
+
+    if (form.percentage_earnings <= 0) {
+        form.errors.percentage_earnings = 'El porcentaje de ganancias no puede ser negativo o cero.';
+        form.percentage_earnings = 1;
+        return;
+    }
+
+    if (form.percentage_earnings > 100) {
+        form.errors.percentage_earnings = 'El porcentaje de ganancias no puede ser mayor a 100.';
+        return;
+    }
+
     form.put(route('warehouses.update', warehouseId.value), {
         data: {
             name: form.name,
+            percentage_earnings: form.percentage_earnings,
         },
         onSuccess: () => {
             router.reload();
@@ -133,6 +189,10 @@ const closeModal = () => {
 };
 
 const addAWarehouse = () => {
+    if (!formAddAWarehouse.email) {
+        formAddAWarehouse.errors.email = 'El campo email es obligatorio.';
+        return;
+    }
     axios
         .post(`/warehouses/${warehouseId.value}/users`, { email: formAddAWarehouse.email })
         .then((response) => {
@@ -191,6 +251,7 @@ const deleteUserToWarehouse = (user) => {
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Nombre</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Creado por</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Creado el</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Porcentaje de Ganancias</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Acciones</th>
                         </tr>
                     </thead>
@@ -203,6 +264,7 @@ const deleteUserToWarehouse = (user) => {
                                     new Date(warehouse.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' })
                                 }}
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ warehouse.percentage_earnings }}%</td>
                             <td class="flex space-x-2 px-6 py-4 whitespace-nowrap" v-if="warehouse.owner.id === auth.id">
                                 <button
                                     class="inline-flex items-center gap-2 rounded-full border border-green-500 px-4 py-2 text-sm font-medium text-green-600 shadow-sm transition hover:bg-green-500 hover:text-white"
@@ -261,6 +323,17 @@ const deleteUserToWarehouse = (user) => {
                                     ref="warehouseName"
                                 />
                                 <InputError :message="form.errors.name" class="mt-2" />
+                            </div>
+                            <div class="mb-4">
+                                <Label for="percentage_earnings">Porcentaje de Ganancias</Label>
+                                <Input
+                                    id="percentage_earnings"
+                                    type="number"
+                                    v-model="form.percentage_earnings"
+                                    class="mt-1 block w-full"
+                                    placeholder="Porcentaje de Ganancias"
+                                />
+                                <InputError :message="form.errors.percentage_earnings" class="mt-2" />
                             </div>
                             <div class="flex items-center justify-end gap-4">
                                 <button type="button" class="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600" @click="closeModal()">
