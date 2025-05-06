@@ -138,7 +138,7 @@ const updateWarehouse = () => {
             });
             dataList.value = dataList.value.map((item) => {
                 if (item.id === warehouseId.value) {
-                    return { ...item, name: form.name };
+                    return { ...item, name: form.name, percentage_earnings: form.percentage_earnings };
                 }
                 return item;
             });
